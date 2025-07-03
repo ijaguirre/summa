@@ -1591,6 +1591,19 @@ subroutine aeroResist(&
                     err, cmessage                                     ) ! output: error control
     if (err/=0) then; message=trim(message)//trim(cmessage); return; end if
 
+
+    ! Use a gradient approach 
+    referenceHeight   = z0Canopy+zeroPlaneDisplacement
+    windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
+    mHeight = mHeight - referenceHeight
+    windspd = windspd - windspdCanopyRef
+
+    print *, 'referenceHeight = ', referenceHeight
+    print *, 'windspdCanopyRef = ', windspdCanopyRef
+    print *, 'adjusted mHeight = ', mHeight
+    print *, 'adjusted windspd = ', windspd
+
+
     ! compute turbulent exchange coefficient (-)
     canopyExNeut = (vkc**2_i4b) / ( log((mHeight - zeroPlaneDisplacement)/z0Canopy))**2_i4b     ! coefficient under conditions of neutral stability
     sfc2AtmExchangeCoeff_canopy = canopyExNeut*canopyStabilityCorrection                        ! after stability corrections
