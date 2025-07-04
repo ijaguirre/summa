@@ -1599,27 +1599,28 @@ subroutine aeroResist(&
     ! Use a gradient approach 
     ! compute windspeed at the top of the canopy above snow depth (m s-1)
     ! NOTE: stability corrections cancel out
-    windConvFactor_fv = log((heightCanopyTopAboveSnow - zeroPlaneDisplacement)/z0Canopy) / log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
-    windspdCanopyTop  = windspd*windConvFactor_fv
-    ! Ask Wouter about this?
 
-    referenceHeight   = z0Canopy+zeroPlaneDisplacement
-    windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
+    ! Ask Wouter about this?
     mHeightDiff = mHeight - referenceHeight
+    referenceHeight   = z0Canopy+zeroPlaneDisplacement
+    windspdCanopyRef  = windspd/log((mHeightDiff - snowDepth - zeroPlaneDisplacement)/z0Canopy)
+
     windspdDiff = windspd - windspdCanopyRef
 
+    windConvFactor_fv = log((heightCanopyTopAboveSnow - zeroPlaneDisplacement)/z0Canopy) / log((mHeightDiff - snowDepth - zeroPlaneDisplacement)/z0Canopy)
+    windspdCanopyTop  = windspdDiff*windConvFactor_fv
 
 
 
     ! compute turbulent exchange coefficient (-)
-    canopyExNeut = (vkc**2_i4b) / ( log((mHeight - zeroPlaneDisplacement)/z0Canopy))**2_i4b     ! coefficient under conditions of neutral stability
+    canopyExNeut = (vkc**2_i4b) / ( log((mHeightDiff - zeroPlaneDisplacement)/z0Canopy))**2_i4b     ! coefficient under conditions of neutral stability
     sfc2AtmExchangeCoeff_canopy = canopyExNeut*canopyStabilityCorrection                        ! after stability corrections
 
     ! compute the friction velocity (m s-1)
-    frictionVelocity = windspd * sqrt(sfc2AtmExchangeCoeff_canopy)
+    frictionVelocity = windspdDiff * sqrt(sfc2AtmExchangeCoeff_canopy)
 
     ! compute the above-canopy resistance (s m-1)
-    canopyResistance = 1._rkind/(sfc2AtmExchangeCoeff_canopy*windspd)
+    canopyResistance = 1._rkind/(sfc2AtmExchangeCoeff_canopy*windspdDiff)
     if (canopyResistance < 0._rkind) then; err=20; message=trim(message)//'canopy resistance < 0'; return; end if
 
 
@@ -1629,7 +1630,7 @@ subroutine aeroResist(&
     windReductionFactor = windReductionParam * exposedVAI**twoThirds * (heightCanopyTopAboveSnow - heightCanopyBottomAboveSnow)**oneThird / leafDimension**oneThird
 
     ! compute windspeed at the height z0Canopy+zeroPlaneDisplacement (m s-1)
-    referenceHeight   = z0Canopy+zeroPlaneDisplacement
+    !referenceHeight   = z0Canopy+zeroPlaneDisplacement
     windConvFactor    = exp(-windReductionFactor*(1._rkind - (referenceHeight/heightCanopyTopAboveSnow)))
     windspdRefHeight  = windspdCanopyTop*windConvFactor
     if(heightCanopyTopAboveSnow < referenceHeight)then; err=20; message=trim(message)//'canopy top height above snow < reference height'; return; end if 
