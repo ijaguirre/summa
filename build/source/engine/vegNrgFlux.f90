@@ -1608,10 +1608,7 @@ subroutine aeroResist(&
     mHeightDiff = mHeight - referenceHeight
     windspdDiff = windspd - windspdCanopyRef
 
-    print *, 'referenceHeight = ', referenceHeight
-    print *, 'windspdCanopyRef = ', windspdCanopyRef
-    print *, 'adjusted mHeight = ', mHeight
-    print *, 'adjusted windspd = ', windspd
+
 
 
     ! compute turbulent exchange coefficient (-)
