@@ -1454,7 +1454,7 @@ subroutine aeroResist(&
   real(rkind),intent(out)          :: frictionVelocity              ! friction velocity (m s-1)
   real(rkind),intent(out)          :: windspdCanopyTop              ! windspeed at the top of the canopy (m s-1)
   real(rkind),intent(out)          :: windspdCanopyBottom           ! windspeed at the height of the bottom of the canopy (m s-1)
-  real(rkind),intent(out)          :: windspdCanopyRef              ! windspeed at the height of the bottom of the canopy (m s-1) -- new 
+  !real(rkind),intent(out)          :: windspdCanopyRef              ! windspeed at the height of the bottom of the canopy (m s-1) -- new 
   real(rkind),intent(out)          :: leafResistance                ! mean leaf boundary layer resistance per unit leaf area (s m-1)
   real(rkind),intent(out)          :: groundResistance              ! below canopy aerodynamic resistance (s m-1)
   real(rkind),intent(out)          :: canopyResistance              ! above canopy aerodynamic resistance (s m-1)
@@ -1510,6 +1510,7 @@ subroutine aeroResist(&
   real(rkind)                      :: singleLeafConductance                ! leaf boundary layer conductance (m s-1)
   real(rkind)                      :: canopyLeafConductance                ! leaf boundary layer conductance -- scaled up to the canopy (m s-1)
   real(rkind)                      :: leaf2CanopyScaleFactor               ! factor to scale from the leaf to the canopy [m s-(1/2)]
+  real(rkind)                      :: windspdCanopyRef                     ! factor to adjust wind speed [July 3, 2025]
   ! -----------------------------------------------------------------------------------------------------------------------------------------
   ! initialize error control
   err=0; message='aeroResist/'
