@@ -1591,7 +1591,7 @@ subroutine aeroResist(&
                     err, cmessage                                     ) ! output: error control
     if (err/=0) then; message=trim(message)//trim(cmessage); return; end if
 
-    !referenceHeight   = z0Canopy+zeroPlaneDisplacement
+    ! referenceHeight   = z0Canopy+zeroPlaneDisplacement
     ! windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
     ! mHeight = mHeight - referenceHeight,                        & ! input:  measurement height (m)
     ! windspd = windspd - windspdCanopyRef, 
