@@ -1568,6 +1568,7 @@ subroutine aeroResist(&
     ! check measurement height
     if (mHeight < zeroPlaneDisplacement+z0Canopy) then; err=20; message=trim(message)//'measurement height is below the displacement height'; return; end if
     
+    mHeight = mHeight - referenceHeight
     ! -----------------------------------------------------------------------------------------------------------------------------------------
     ! -----------------------------------------------------------------------------------------------------------------------------------------
     ! * compute resistance for the case where the canopy is exposed
@@ -1603,7 +1604,7 @@ subroutine aeroResist(&
 
     referenceHeight   = z0Canopy+zeroPlaneDisplacement
     windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
-    mHeight = mHeight - referenceHeight
+    
     windspd = windspd - windspdCanopyRef
 
     print *, 'referenceHeight = ', referenceHeight
