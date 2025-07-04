@@ -1594,9 +1594,9 @@ subroutine aeroResist(&
     !referenceHeight   = z0Canopy+zeroPlaneDisplacement
     ! windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
     ! mHeight = mHeight - referenceHeight,                        & ! input:  measurement height (m)
-    ! windspd = windspd - windspdCanopyRef,   
+    ! windspd = windspd - windspdCanopyRef, 
+    ! Note: all usages of mHeight included -   zeroPlaneDisplacement
     
-    referenceHeight   = z0Canopy+zeroPlaneDisplacement                    & ! input:  wind speed above the canopy (m s-1) 
 
     ! compute turbulent exchange coefficient (-)
     canopyExNeut = (vkc**2_i4b) / ( log((mHeight - zeroPlaneDisplacement + z0Canopy)/z0Canopy))**2_i4b     ! coefficient under conditions of neutral stability
@@ -1619,7 +1619,7 @@ subroutine aeroResist(&
     windReductionFactor = windReductionParam * exposedVAI**twoThirds * (heightCanopyTopAboveSnow - heightCanopyBottomAboveSnow)**oneThird / leafDimension**oneThird
 
     ! compute windspeed at the height z0Canopy+zeroPlaneDisplacement (m s-1)
-  
+    referenceHeight   = z0Canopy+zeroPlaneDisplacement                    & ! input:  wind speed above the canopy (m s-1) 
     windConvFactor    = exp(-windReductionFactor*(1._rkind - (referenceHeight/heightCanopyTopAboveSnow)))
     windspdRefHeight  = windspdCanopyTop*windConvFactor
     if(heightCanopyTopAboveSnow < referenceHeight)then; err=20; message=trim(message)//'canopy top height above snow < reference height'; return; end if 
