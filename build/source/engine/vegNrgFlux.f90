@@ -1454,6 +1454,7 @@ subroutine aeroResist(&
   real(rkind),intent(out)          :: frictionVelocity              ! friction velocity (m s-1)
   real(rkind),intent(out)          :: windspdCanopyTop              ! windspeed at the top of the canopy (m s-1)
   real(rkind),intent(out)          :: windspdCanopyBottom           ! windspeed at the height of the bottom of the canopy (m s-1)
+  real(rkind),intent(out)          :: windspdCanopyRef              ! windspeed at the height of the bottom of the canopy (m s-1) -- new 
   real(rkind),intent(out)          :: leafResistance                ! mean leaf boundary layer resistance per unit leaf area (s m-1)
   real(rkind),intent(out)          :: groundResistance              ! below canopy aerodynamic resistance (s m-1)
   real(rkind),intent(out)          :: canopyResistance              ! above canopy aerodynamic resistance (s m-1)
@@ -1593,6 +1594,12 @@ subroutine aeroResist(&
 
 
     ! Use a gradient approach 
+    ! compute windspeed at the top of the canopy above snow depth (m s-1)
+    ! NOTE: stability corrections cancel out
+    windConvFactor_fv = log((heightCanopyTopAboveSnow - zeroPlaneDisplacement)/z0Canopy) / log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
+    windspdCanopyTop  = windspd*windConvFactor_fv
+    ! Ask Wouter about this?
+
     referenceHeight   = z0Canopy+zeroPlaneDisplacement
     windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
     mHeight = mHeight - referenceHeight
@@ -1615,10 +1622,7 @@ subroutine aeroResist(&
     canopyResistance = 1._rkind/(sfc2AtmExchangeCoeff_canopy*windspd)
     if (canopyResistance < 0._rkind) then; err=20; message=trim(message)//'canopy resistance < 0'; return; end if
 
-    ! compute windspeed at the top of the canopy above snow depth (m s-1)
-    ! NOTE: stability corrections cancel out
-    windConvFactor_fv = log((heightCanopyTopAboveSnow - zeroPlaneDisplacement)/z0Canopy) / log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
-    windspdCanopyTop  = windspd*windConvFactor_fv
+
 
     ! compute the windspeed reduction
     ! Refs: Norman et al. (Ag. Forest Met., 1995) -- citing Goudriaan (1977 manuscript "crop micrometeorology: a simulation study", Wageningen).
