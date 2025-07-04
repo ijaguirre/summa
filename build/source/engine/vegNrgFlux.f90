@@ -1618,10 +1618,16 @@ subroutine aeroResist(&
     ! Refs: Norman et al. (Ag. Forest Met., 1995) -- citing Goudriaan (1977 manuscript "crop micrometeorology: a simulation study", Wageningen).
     windReductionFactor = windReductionParam * exposedVAI**twoThirds * (heightCanopyTopAboveSnow - heightCanopyBottomAboveSnow)**oneThird / leafDimension**oneThird
 
-    ! compute windspeed at the height z0Canopy+zeroPlaneDisplacement (m s-1)
-    referenceHeight   = z0Canopy+zeroPlaneDisplacement                    & ! input:  wind speed above the canopy (m s-1) 
+
+     ! compute windspeed at the height z0Canopy+zeroPlaneDisplacement (m s-1)
+    referenceHeight   = z0Canopy+zeroPlaneDisplacement
     windConvFactor    = exp(-windReductionFactor*(1._rkind - (referenceHeight/heightCanopyTopAboveSnow)))
     windspdRefHeight  = windspdCanopyTop*windConvFactor
+
+    ! compute windspeed at the height z0Canopy+zeroPlaneDisplacement (m s-1)
+    ! referenceHeight   = z0Canopy+zeroPlaneDisplacement                    & ! input:  wind speed above the canopy (m s-1) 
+    ! windConvFactor    = exp(-windReductionFactor*(1._rkind - (referenceHeight/heightCanopyTopAboveSnow)))
+    ! windspdRefHeight  = windspdCanopyTop*windConvFactor
     if(heightCanopyTopAboveSnow < referenceHeight)then; err=20; message=trim(message)//'canopy top height above snow < reference height'; return; end if 
 
     ! compute windspeed at the bottom of the canopy relative to the snow depth (m s-1)
