@@ -1512,6 +1512,7 @@ subroutine aeroResist(&
   real(rkind)                      :: leaf2CanopyScaleFactor               ! factor to scale from the leaf to the canopy [m s-(1/2)]
   real(rkind)                      :: windspdCanopyRef                     ! factor to adjust wind speed [July 3, 2025]
   real(rkind)                      :: mHeightDiff                          ! updated mHeight with the diff gradient [July 3, 2025]
+  real(rkind)                      :: windspdDiff                          ! updated windspd with the diff gradient for the canopy [July 3, 2025]
   ! -----------------------------------------------------------------------------------------------------------------------------------------
   ! initialize error control
   err=0; message='aeroResist/'
@@ -1605,7 +1606,7 @@ subroutine aeroResist(&
     referenceHeight   = z0Canopy+zeroPlaneDisplacement
     windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
     mHeightDiff = mHeight - referenceHeight
-    windspd = windspd - windspdCanopyRef
+    windspdDiff = windspd - windspdCanopyRef
 
     print *, 'referenceHeight = ', referenceHeight
     print *, 'windspdCanopyRef = ', windspdCanopyRef
