@@ -1511,6 +1511,7 @@ subroutine aeroResist(&
   real(rkind)                      :: canopyLeafConductance                ! leaf boundary layer conductance -- scaled up to the canopy (m s-1)
   real(rkind)                      :: leaf2CanopyScaleFactor               ! factor to scale from the leaf to the canopy [m s-(1/2)]
   real(rkind)                      :: windspdCanopyRef                     ! factor to adjust wind speed [July 3, 2025]
+  real(rkind)                      :: mHeightDiff                          ! updated mHeight with the diff gradient [July 3, 2025]
   ! -----------------------------------------------------------------------------------------------------------------------------------------
   ! initialize error control
   err=0; message='aeroResist/'
@@ -1568,7 +1569,6 @@ subroutine aeroResist(&
     ! check measurement height
     if (mHeight < zeroPlaneDisplacement+z0Canopy) then; err=20; message=trim(message)//'measurement height is below the displacement height'; return; end if
     
-    mHeight = mHeight - referenceHeight
     ! -----------------------------------------------------------------------------------------------------------------------------------------
     ! -----------------------------------------------------------------------------------------------------------------------------------------
     ! * compute resistance for the case where the canopy is exposed
@@ -1604,7 +1604,7 @@ subroutine aeroResist(&
 
     referenceHeight   = z0Canopy+zeroPlaneDisplacement
     windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
-    
+    mHeightDiff = mHeight - referenceHeight
     windspd = windspd - windspdCanopyRef
 
     print *, 'referenceHeight = ', referenceHeight
