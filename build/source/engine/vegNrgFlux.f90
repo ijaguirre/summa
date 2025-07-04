@@ -1591,8 +1591,15 @@ subroutine aeroResist(&
                     err, cmessage                                     ) ! output: error control
     if (err/=0) then; message=trim(message)//trim(cmessage); return; end if
 
+    !referenceHeight   = z0Canopy+zeroPlaneDisplacement
+    ! windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
+    ! mHeight = mHeight - referenceHeight,                        & ! input:  measurement height (m)
+    ! windspd = windspd - windspdCanopyRef,   
+    
+    referenceHeight   = z0Canopy+zeroPlaneDisplacement                    & ! input:  wind speed above the canopy (m s-1) 
+
     ! compute turbulent exchange coefficient (-)
-    canopyExNeut = (vkc**2_i4b) / ( log((mHeight - zeroPlaneDisplacement)/z0Canopy))**2_i4b     ! coefficient under conditions of neutral stability
+    canopyExNeut = (vkc**2_i4b) / ( log((mHeight - zeroPlaneDisplacement + z0Canopy)/z0Canopy))**2_i4b     ! coefficient under conditions of neutral stability
     sfc2AtmExchangeCoeff_canopy = canopyExNeut*canopyStabilityCorrection                        ! after stability corrections
 
     ! compute the friction velocity (m s-1)
@@ -1604,7 +1611,7 @@ subroutine aeroResist(&
 
     ! compute windspeed at the top of the canopy above snow depth (m s-1)
     ! NOTE: stability corrections cancel out
-    windConvFactor_fv = log((heightCanopyTopAboveSnow - zeroPlaneDisplacement)/z0Canopy) / log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy)
+    windConvFactor_fv = log((heightCanopyTopAboveSnow - zeroPlaneDisplacement)/z0Canopy) / log((mHeight - snowDepth - zeroPlaneDisplacement + z0Canopy)/z0Canopy)
     windspdCanopyTop  = windspd*windConvFactor_fv
 
     ! compute the windspeed reduction
@@ -1612,7 +1619,7 @@ subroutine aeroResist(&
     windReductionFactor = windReductionParam * exposedVAI**twoThirds * (heightCanopyTopAboveSnow - heightCanopyBottomAboveSnow)**oneThird / leafDimension**oneThird
 
     ! compute windspeed at the height z0Canopy+zeroPlaneDisplacement (m s-1)
-    referenceHeight   = z0Canopy+zeroPlaneDisplacement
+  
     windConvFactor    = exp(-windReductionFactor*(1._rkind - (referenceHeight/heightCanopyTopAboveSnow)))
     windspdRefHeight  = windspdCanopyTop*windConvFactor
     if(heightCanopyTopAboveSnow < referenceHeight)then; err=20; message=trim(message)//'canopy top height above snow < reference height'; return; end if 
