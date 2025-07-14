@@ -483,10 +483,12 @@ subroutine checkFeas(&
         !write(*,'(a,1x,L1,1x,10(f20.10,1x))') 'feasible, max, stateVec( ixVegNrg )', feasible, canopyTempMax, stateVec(ixVegNrg)
       endif
     endif
-
+    
+    print *, "in checkFeas/canopy liq check: stateVec(ixVegHyd) = ",stateVec(ixVegHyd)
     ! check canopy liquid water is not negative
     if(ixVegHyd/=integerMissing)then
       if(stateVec(ixVegHyd) < 0._rkind)then 
+        print *, "in checkFeas/canopy liq check: stateVec(ixVegHyd) = ",stateVec(ixVegHyd)
         feasible=.false.
         message=trim(message)//'canopy liq water neg/'
         !write(*,'(a,1x,L1,1x,10(f20.10,1x))') 'feasible, min, stateVec( ixVegHyd )', feasible, 0._rkind, stateVec(ixVegHyd)
