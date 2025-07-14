@@ -1509,6 +1509,8 @@ subroutine aeroResist(&
   real(rkind)                      :: singleLeafConductance                ! leaf boundary layer conductance (m s-1)
   real(rkind)                      :: canopyLeafConductance                ! leaf boundary layer conductance -- scaled up to the canopy (m s-1)
   real(rkind)                      :: leaf2CanopyScaleFactor               ! factor to scale from the leaf to the canopy [m s-(1/2)]
+  real(rkind)                      :: referenceHeight                      ! referenceHeight 
+  real(rkind)                      :: windspdCanopyRef                     ! windspdCanopyRef
   ! -----------------------------------------------------------------------------------------------------------------------------------------
   ! initialize error control
   err=0; message='aeroResist/'
@@ -1517,6 +1519,11 @@ subroutine aeroResist(&
   if (mHeight < heightCanopyTop) then
     err=20; message=trim(message)//'measurement height is below the top of the canopy'; return
   end if
+  
+  ! ------------------------------------------------------------------------------------------------------------------------------------------
+  ! new variables following Wouter's idea
+  referenceHeight   = z0Canopy+zeroPlaneDisplacement
+  windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy) ! This is also a new variable 
 
   ! -----------------------------------------------------------------------------------------------------------------------------------------
   ! * compute vegetation poperties (could be done at the same time as phenology.. does not have to be in the flux routine!)
@@ -1574,10 +1581,10 @@ subroutine aeroResist(&
                     ! input
                     ixStability,                                      & ! input:  choice of stability function
                     ! input: forcing data, diagnostic and state variables
-                    mHeight,                                          & ! input:  measurement height (m)
+                    mHeight - referenceHeight,                                          & ! input:  measurement height (m)
                     airTemp,                                          & ! input:  air temperature above the canopy (K)
                     canairTemp,                                       & ! input:  temperature of the canopy air space (K)
-                    windspd,                                          & ! input:  wind speed above the canopy (m s-1)
+                    windspd - windspdCanopyRef,                                          & ! input:  wind speed above the canopy (m s-1)
                     ! input: stability parameters
                     critRichNumber,                                   & ! input:  critical value for the bulk Richardson number where turbulence ceases (-)
                     Louis79_bparam,                                   & ! input:  parameter in Louis (1979) stability function
