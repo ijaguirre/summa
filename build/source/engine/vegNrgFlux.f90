@@ -1509,6 +1509,7 @@ subroutine aeroResist(&
   real(rkind)                      :: singleLeafConductance                ! leaf boundary layer conductance (m s-1)
   real(rkind)                      :: canopyLeafConductance                ! leaf boundary layer conductance -- scaled up to the canopy (m s-1)
   real(rkind)                      :: leaf2CanopyScaleFactor               ! factor to scale from the leaf to the canopy [m s-(1/2)]
+  real(rkind)                      :: windspdCanopyRef                     ! factor to adjust wind following Martyn's suggestion.
   ! -----------------------------------------------------------------------------------------------------------------------------------------
   ! initialize error control
   err=0; message='aeroResist/'
@@ -1570,14 +1571,17 @@ subroutine aeroResist(&
     ! -----------------------------------------------------------------------------------------------------------------------------------------
     ! * compute resistance for the case where the canopy is exposed
     ! compute the stability correction for resistance from canopy air space to air above the canopy (-)
+    referenceHeight   = z0Canopy+zeroPlaneDisplacement
+    windspdCanopyRef  = windspd/log((mHeight - snowDepth - zeroPlaneDisplacement)/z0Canopy) ! This is also a new variable 
+
     call aStability(&
                     ! input
                     ixStability,                                      & ! input:  choice of stability function
                     ! input: forcing data, diagnostic and state variables
-                    mHeight,                                          & ! input:  measurement height (m)
+                    mHeight - referenceHeight,                                          & ! input:  measurement height (m)
                     airTemp,                                          & ! input:  air temperature above the canopy (K)
                     canairTemp,                                       & ! input:  temperature of the canopy air space (K)
-                    windspd,                                          & ! input:  wind speed above the canopy (m s-1)
+                    windspd - windspdCanopyRef,                                          & ! input:  wind speed above the canopy (m s-1)
                     ! input: stability parameters
                     critRichNumber,                                   & ! input:  critical value for the bulk Richardson number where turbulence ceases (-)
                     Louis79_bparam,                                   & ! input:  parameter in Louis (1979) stability function
