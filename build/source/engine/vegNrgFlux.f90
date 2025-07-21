@@ -1574,7 +1574,7 @@ subroutine aeroResist(&
                     ! input
                     ixStability,                                      & ! input:  choice of stability function
                     ! input: forcing data, diagnostic and state variables
-                    mHeight,                                          & ! input:  measurement height (m)
+                    mHeight - referenceHeight,                                          & ! input:  measurement height (m)
                     airTemp,                                          & ! input:  air temperature above the canopy (K)
                     canairTemp,                                       & ! input:  temperature of the canopy air space (K)
                     windspd,                                          & ! input:  wind speed above the canopy (m s-1)
