@@ -1594,7 +1594,7 @@ subroutine aeroResist(&
                     dCanopyStabilityCorrection_dCasTemp,              & ! output: derivative in stability correction w.r.t. canopy air space temperature (K-1)
                     err, cmessage                                     ) ! output: error control
     if (err/=0) then; message=trim(message)//trim(cmessage); return; end if
-
+    print *, 'aeroResist: RiBulkCanopy = ', RiBulkCanopy
     ! compute turbulent exchange coefficient (-)
     canopyExNeut = (vkc**2_i4b) / ( log((mHeight - zeroPlaneDisplacement)/z0Canopy))**2_i4b     ! coefficient under conditions of neutral stability
     sfc2AtmExchangeCoeff_canopy = canopyExNeut*canopyStabilityCorrection                        ! after stability corrections
@@ -2488,7 +2488,7 @@ subroutine aStability(&
   ! ***** process unstable cases
   if (RiBulk<0._rkind) then
     ! compute surface-atmosphere exchange coefficient (-)
-    stabilityCorrection = (1._rkind - 16._rkind*RiBulk) **(-0.5_rkind)
+    stabilityCorrection = sqrt(1._rkind - 16._rkind*RiBulk)
     ! compute derivative in surface-atmosphere exchange coefficient w.r.t. temperature (K-1)
     ! dStabilityCorrection_dRich    = (-16._rkind) * 0.5_rkind*(1._rkind - 16._rkind*RiBulk)**(-0.5_rkind) ! original
     dStabilityCorrection_dRich    = -8._rkind/sqrt(1._rkind - 16._rkind*RiBulk) ! simplify and use sqrt intrinsic for speed
