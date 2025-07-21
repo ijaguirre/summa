@@ -1594,7 +1594,7 @@ subroutine aeroResist(&
                     dCanopyStabilityCorrection_dCasTemp,              & ! output: derivative in stability correction w.r.t. canopy air space temperature (K-1)
                     err, cmessage                                     ) ! output: error control
     if (err/=0) then; message=trim(message)//trim(cmessage); return; end if
-    print *, 'aeroResist: RiBulkCanopy = ', RiBulkCanopy
+    print *, 'aeroResist: RiBulkCanopy, canopyStabilityCorrection = ', RiBulkCanopy, canopyStabilityCorrection
     ! compute turbulent exchange coefficient (-)
     canopyExNeut = (vkc**2_i4b) / ( log((mHeight - zeroPlaneDisplacement)/z0Canopy))**2_i4b     ! coefficient under conditions of neutral stability
     sfc2AtmExchangeCoeff_canopy = canopyExNeut*canopyStabilityCorrection                        ! after stability corrections
