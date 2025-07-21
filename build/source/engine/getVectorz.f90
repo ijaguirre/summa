@@ -486,6 +486,7 @@ subroutine checkFeas(&
 
     ! check canopy liquid water is not negative
     if(ixVegHyd/=integerMissing)then
+      print *, "in checkFeas/canopy liq check: stateVec(ixVegHyd) = ",stateVec(ixVegHyd)
       if(stateVec(ixVegHyd) < 0._rkind)then 
         feasible=.false.
         message=trim(message)//'canopy liq water neg/'
