@@ -2488,7 +2488,7 @@ subroutine aStability(&
   ! ***** process unstable cases
   if (RiBulk<0._rkind) then
     ! compute surface-atmosphere exchange coefficient (-)
-    stabilityCorrection = sqrt(1._rkind - 16._rkind*RiBulk)
+    stabilityCorrection = (1._rkind - 16._rkind*RiBulk) **(-0.5_rkind)
     ! compute derivative in surface-atmosphere exchange coefficient w.r.t. temperature (K-1)
     ! dStabilityCorrection_dRich    = (-16._rkind) * 0.5_rkind*(1._rkind - 16._rkind*RiBulk)**(-0.5_rkind) ! original
     dStabilityCorrection_dRich    = -8._rkind/sqrt(1._rkind - 16._rkind*RiBulk) ! simplify and use sqrt intrinsic for speed
