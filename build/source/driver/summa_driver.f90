@@ -102,7 +102,8 @@ contains
 
    ! loop through time
    do modelTimeStep=1,numtim
- 
+     ! print the current time step
+     print *, 'modelTimeStep = ', modelTimeStep
      ! read model forcing data
      call summa_readForcing(modelTimeStep, summa1_struc(n), err, message)
      call handle_err(err, message)
