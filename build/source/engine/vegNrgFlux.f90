@@ -2483,6 +2483,8 @@ subroutine aStability(&
 
   ! ***** process unstable cases
   if (RiBulk<0._rkind) then
+    print *, "aStability: negative bulk Richardson number RiBulk = ", RiBulk, &
+           " (airTemp = ", airTemp, ", sfcTemp = ", sfcTemp, ", windspd = ", windspd, ")"
     ! compute surface-atmosphere exchange coefficient (-)
     stabilityCorrection = sqrt(1._rkind - 16._rkind*RiBulk)
     ! compute derivative in surface-atmosphere exchange coefficient w.r.t. temperature (K-1)
@@ -2505,6 +2507,8 @@ subroutine aStability(&
       if (RiBulk >= critRichNumber) dStabilityCorrection_dRich = stabilityTol
     ! Louis 1979
     case(louisInversePower)
+      print *, "stable cases RiBulk = ", RiBulk, &
+             " (airTemp = ", airTemp, ", sfcTemp = ", sfcTemp, ", windspd = ", windspd, ")"
       ! scale the "b" parameter for stable conditions
       bprime = Louis79_bparam/2._rkind
       ! compute surface-atmosphere exchange coefficient (-)
